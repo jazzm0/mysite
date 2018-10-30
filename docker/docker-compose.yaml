@@ -32,3 +32,21 @@ services:
     - ME_CONFIG_MONGODB_PORT=27017
     depends_on:
     - mongodb
+
+  postgres:
+    image: postgres
+    ports:
+    - 5432:5432
+    environment:
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD=MYpostgres
+    - POSTGRES=postgres
+
+  postgresadmin:
+    image: sosedoff/pgweb
+    ports:
+    - 9502:8081
+    depends_on:
+    - postgres
+    environment:
+    - DATABASE_URL=postgres://postgres:MYpostgres@postgres:5432/postgres?sslmode=disable
