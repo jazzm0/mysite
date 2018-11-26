@@ -1,0 +1,65 @@
+version: '3'
+services:
+
+  #  rabbitmq:
+  #    container_name: rpg-rabbitmq-local-dev
+  #    image: rabbitmq:3-management
+  #    environment:
+  #      RABBITMQ_DEFAULT_USER: "someUser"
+  #      RABBITMQ_DEFAULT_PASS: "Toor1234"
+  #      RABBITMQ_DEFAULT_VHOST: "/"
+  #    ports:
+  #    - 5671:5671
+  #    - 5672:5672
+  #    - 4369:4369
+  #    - 9500:15672
+  #    - 25672:25672
+  #    - 15672:15672
+  #
+  #  mongodb:
+  #    container_name: rpg-mongodb-local-dev
+  #    image: mongo
+  #    ports:
+  #    - 27017:27017
+  #
+  #  mongodbadmin:
+  #    container_name: rpg-mongo-express
+  #    image: mongo-express
+  #    ports:
+  #    - 9501:8081
+  #    environment:
+  #    - ME_CONFIG_MONGODB_SERVER=mongodb
+  #    - ME_CONFIG_MONGODB_PORT=27017
+  #    depends_on:
+  #    - mongodb
+
+  postgres:
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=MYpostgres
+      - POSTGRES=postgres
+
+  postgresadmin:
+    image: sosedoff/pgweb
+    ports:
+      - 9502:8081
+    depends_on:
+      - postgres
+    environment:
+      - DATABASE_URL=postgres://postgres:MYpostgres@postgres:5432/postgres?sslmode=disable
+
+  web:
+    build: .
+    command: ./docker-entrypoint.sh
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
