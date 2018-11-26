@@ -13,7 +13,7 @@ function exit {
 trap exit EXIT
 
 #docker-compose up -d
-docker-compose up
+docker-compose up --build
 
 # Wait forever
 
